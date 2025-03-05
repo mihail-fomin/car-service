@@ -1,3 +1,20 @@
+import Link from "next/link";
+
 export default function Home() {
-    return <div className="">HELLO WORLD</div>;
+    return (
+        <div className="flex flex-col items-center justify-center h-screen text-center">
+            <h1 className="text-4xl font-bold">Планируй и обслуживай свой автомобиль.</h1>
+            <p className="text-center mt-4 text-gray-500">
+                Начни сейчас и получи доступ к лучшим инструментам для обслуживания автомобиля.
+            </p>
+            <div className="flex gap-4 mt-4">
+                <Link
+                    className="text-white px-4 py-2 rounded-md border-[1px] border-gray-200"
+                    href="/api/auth/signin"
+                >
+                    Войти через Google
+                </Link>
+            </div>
+        </div>
+    )
 }
