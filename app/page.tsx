@@ -1,6 +1,11 @@
+import { getServerSession } from "next-auth";
+import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
+import authOptions from "./auth/authOptions";
 
-export default function Home() {
+export default async function Home() {
+    const session = await getServerSession(authOptions)
+
     return (
         <div className="flex flex-col items-center justify-center h-screen text-center">
             <h1 className="text-4xl font-bold">Планируй и обслуживай свой автомобиль.</h1>
@@ -8,12 +13,21 @@ export default function Home() {
                 Начни сейчас и получи доступ к лучшим инструментам для обслуживания автомобиля.
             </p>
             <div className="flex gap-4 mt-4">
-                <Link
-                    className="text-white px-4 py-2 rounded-md border-[1px] border-gray-200"
-                    href="/api/auth/signin"
+                {!session ? (
+                    <Link
+                        className="text-white px-4 py-2 rounded-md border-[1px] border-gray-200"
+                        href="/api/auth/signin"
                 >
                     Войти через Google
                 </Link>
+                ) : (
+                    <Link
+                        className="text-white px-4 py-2 rounded-md border-[1px] border-gray-200"
+                        href="/api/auth/signout"
+                    >
+                        Выйти
+                    </Link>
+                )}
             </div>
         </div>
     )
