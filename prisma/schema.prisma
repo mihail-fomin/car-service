@@ -9,10 +9,39 @@ datasource db {
 
 model User {
   id        String   @id @default(cuid()) @map("_id")
+  name      String
+  image     String
   email     String   @unique
-  password  String
   createdAt DateTime @default(now())
+  emailVerified Boolean?
   cars      Car[]
+  accounts  Account[]
+  sessions  Session[]
+}
+
+model Account {
+  id                 String  @id @default(uuid())
+  userId             String
+  user               User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String?
+  access_token       String?
+  expires_at         Int?
+  scope              String?
+  token_type        String?
+  id_token          String?
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(uuid())
+  sessionToken String   @unique
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expires      DateTime
 }
 
 model Car {

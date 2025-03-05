@@ -7,7 +7,7 @@ const clientId = process.env.GOOGLE_CLIENT_ID
 const clientSecret = process.env.GOOGLE_CLIENT_SECRET
 
 if (!clientId || !clientSecret) {
-  throw new Error('VK_CLIENT_ID and VK_CLIENT_SECRET must be defined in your environment')
+  throw new Error('GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET must be defined in your environment')
 }
 
 const authOptions: NextAuthOptions = {
@@ -23,6 +23,14 @@ const authOptions: NextAuthOptions = {
     maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   secret: process.env.NEXTAUTH_SECRET,
+//   callbacks: {
+//     async session({ session, user }) {
+//         if (user) {
+//             session.user.id = user.id
+//         }
+//         return session
+//     }
+//   }
 }
 
 export default authOptions
