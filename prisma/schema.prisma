@@ -58,7 +58,25 @@ model Maintenance {
   id          String   @id @default(cuid()) @map("_id")
   carId       String
   date        DateTime
-  description String
+  note        String?
   mileage     Int
+  works       Work[]
+  typeId      String
+  type        MaintenanceType @relation(fields: [typeId], references: [id])
+
   car         Car      @relation(fields: [carId], references: [id])
+}
+
+model Work {
+  id            String     @id @default(cuid()) @map("_id")
+  maintenanceId String
+  name          String
+  price         Float
+  maintenance   Maintenance @relation(fields: [maintenanceId], references: [id], onDelete: Cascade)
+}
+
+model MaintenanceType {
+  id   String @id @default(cuid()) @map("_id")
+  name String @unique
+  maintenances Maintenance[]
 }
