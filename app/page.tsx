@@ -1,5 +1,4 @@
 import { getServerSession } from "next-auth";
-import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import authOptions from "./auth/authOptions";
 
@@ -8,7 +7,7 @@ export default async function Home() {
 
     return (
         <div className="flex flex-col items-center justify-center h-screen text-center">
-            <h1 className="text-4xl font-bold">Планируй и обслуживай свой автомобиль.</h1>
+            <h1 className="text-4xl font-bold">Планируй обслуживание своего автомобиля</h1>
             <p className="text-center mt-4 text-gray-500">
                 Начни сейчас и получи доступ к лучшим инструментам для обслуживания автомобиля.
             </p>
