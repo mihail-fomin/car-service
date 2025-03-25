@@ -7,7 +7,7 @@ import SelectMenu from "../ui/SelectMenu";
 
 export type Work = {
   name: string;
-  price: number;
+  price: number | null;
 };
 
 type MaintenanceType = {
@@ -59,7 +59,7 @@ export default function MaintenanceForm() {
     formState: { errors },
   } = useForm<MaintenanceFormData>({
     defaultValues: {
-      works: [{ name: "", price: 0 }],
+      works: [{ name: "", price: null }],
     },
   });
 
@@ -130,7 +130,7 @@ export default function MaintenanceForm() {
                     min: 0,
                   })}
                   placeholder="Цена"
-                  className="w-1/3 p-2 text-gray-200 bg-gray-800 border-gray-700 rounded-md"
+                  className="w-1/6 flex-shrink-0 p-2 text-gray-200 bg-gray-800 border-gray-700 rounded-md"
                 />
                 <button
                   type="button"
