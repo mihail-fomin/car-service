@@ -43,11 +43,11 @@ export default function MaintenanceForm() {
   } = useForm<MaintenanceFormData>({
     defaultValues: {
       price: 0,
+      date: new Date().toISOString().split('T')[0]
     },
   });
 
   const onSubmit = (data: MaintenanceFormData) => {
-    console.log('data: ', data);
     axios.post<Maintenance>('/api/maintenance', {
       ...data,
       price: Number(data.price),
