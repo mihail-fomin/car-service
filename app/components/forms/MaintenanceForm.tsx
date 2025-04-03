@@ -1,14 +1,11 @@
 "use client";
 
-import { useFieldArray, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import BaseButton from "../ui/BaseButton";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import SelectMenu from "../ui/SelectMenu";
-
-export type Work = {
-  name: string;
-  price: number | null;
-};
+import axios from "axios";
+import { Car, Maintenance } from "@prisma/client";
 
 type MaintenanceType = {
   id: string;
@@ -16,71 +13,90 @@ type MaintenanceType = {
 };
 
 type MaintenanceFormData = {
+  carId: string;
   mileage: number;
   date: string;
   typeId: string;
   note?: string;
-  works: Work[];
+  price: number;
 };
 
 export default function MaintenanceForm() {
   const [types, setTypes] = useState<MaintenanceType[]>([]);
-  const [works, setWorks] = useState<Work[]>([]);
-  const formRef = useRef<HTMLFormElement>(null);
-  const [formWidth, setFormWidth] = useState(0);
+  const [cars, setCars] = useState<Car[]>([]);
 
   useEffect(() => {
-    const updateWidth = () => {
-      if (formRef.current) {
-        // Отнимаем padding (p-6 = 1.5rem * 2 = 3rem = 48px)
-        const paddingWidth = 48;
-        const actualWidth = formRef.current.offsetWidth - paddingWidth;
-        setFormWidth(actualWidth);
-      }
-    };
-
-    updateWidth();
-    window.addEventListener('resize', updateWidth);
-    
-    return () => window.removeEventListener('resize', updateWidth);
-  }, []);
-
-  useEffect(() => {
-    fetch("/api/maintenance-types")
-      .then((res) => res.json())
-      .then(setTypes)
+    axios.get("/api/maintenance-types")
+      .then((res) => setTypes(res.data))
       .catch((err) => console.error("Ошибка загрузки типов:", err));
+
+    axios.get("/api/cars")
+      .then((res) => setCars(res.data))
+      .catch((err) => console.error("Ошибка загрузки автомобилей:", err));
   }, []);
 
   const {
     register,
-    control,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<MaintenanceFormData>({
     defaultValues: {
-      works: [{ name: "", price: null }],
+      price: 0,
     },
   });
 
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: "works",
-  });
-
   const onSubmit = (data: MaintenanceFormData) => {
-    console.log("Maintenance Data:", data);
+    console.log('data: ', data);
+    axios.post<Maintenance>('/api/maintenance', {
+      ...data,
+      price: Number(data.price),
+      mileage: Number(data.mileage)
+    })
   };
 
   return (
     <form
-      ref={formRef}
       onSubmit={handleSubmit(onSubmit)}
       className="max-w-lg p-6 mx-auto space-y-4 bg-gray-900 shadow-lg rounded-2xl"
     >
       <h2 className="text-xl font-semibold text-gray-200">
         Добавить обслуживание
       </h2>
+
+      {/* Автомобиль */}
+      <label className="block text-sm font-medium text-gray-300">
+        Автомобиль
+      </label>
+      <SelectMenu
+        options={cars.map(car => ({
+          id: car.id,
+          label: `${car.make} ${car.model} ${car.year}`
+        }))}
+        name="carId"
+        setValue={setValue}
+      />
+      {errors.carId && (
+        <p className="text-sm text-red-400">{errors.carId.message}</p>
+      )}
+
+      {/* Тип обслуживания */}
+      <div>
+        <label className="block text-sm font-medium text-gray-300">
+          Тип обслуживания
+        </label>
+        <SelectMenu
+          options={types.map(type => ({
+            id: type.id,
+            label: type.name
+          }))}
+          name="typeId"
+          setValue={setValue}
+        />
+        {errors.typeId && (
+          <p className="text-sm text-red-400">{errors.typeId.message}</p>
+        )}
+      </div>
 
       {/* Пробег */}
       <div>
@@ -112,45 +128,23 @@ export default function MaintenanceForm() {
         )}
       </div>
 
-      {/* Список выполненных работ */}
-      <div className="space-y-2">
-          <label className="block text-sm font-medium text-gray-300">Тип обслуживания</label>
-          {fields.map((item, index) => (
-            <div key={item.id}>
-              <div className="flex space-x-2 mt-2">
-                <SelectMenu fields={types} containerWidth={formWidth} />
-                {errors.typeId && (
-                  <p className="text-sm text-red-400">{errors.typeId.message}</p>
-                )}
-                <input
-                  type="number"
-                  step="0.01"
-                  {...register(`works.${index}.price`, {
-                    required: "Введите цену",
-                    min: 0,
-                  })}
-                  placeholder="Цена"
-                  className="w-1/6 flex-shrink-0 p-2 text-gray-200 bg-gray-800 border-gray-700 rounded-md"
-                />
-                <button
-                  type="button"
-                  onClick={() => remove(index)}
-                  className="text-red-400 hover:text-red-500"
-                >
-                  ✕
-                </button>
-              </div>
-            </div>
-        ))}
-        <button
-          type="button"
-          onClick={() => append({ name: "", price: 0 })}
-          className="mt-2 text-indigo-400 hover:text-indigo-500"
-        >
-          + Добавить работу
-        </button>
+      {/* Цена */}
+      <div>
+        <label className="block text-sm font-medium text-gray-300">
+          Цена
+        </label>
+        <input
+          type="number"
+          step="0.01"
+          {...register("price", {
+            required: "Введите цену",
+          })}
+          className="block w-full p-2 mt-1 text-gray-200 bg-gray-800 border-gray-700 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+        />
+        {errors.price && (
+          <p className="text-sm text-red-400">{errors.price.message}</p>
+        )}
       </div>
-
       {/* Заметки */}
       <div>
         <label className="block text-sm font-medium text-gray-300">
