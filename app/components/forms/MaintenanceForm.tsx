@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import SelectMenu from "../ui/SelectMenu";
 import axios from "axios";
 import { Car, Maintenance } from "@prisma/client";
+import { useRouter } from "next/navigation";
 
 type MaintenanceType = {
   id: string;
@@ -14,16 +15,22 @@ type MaintenanceType = {
 
 type MaintenanceFormData = {
   carId: string;
-  mileage: number;
   date: string;
-  typeId: string;
+  mileage: number;
   note?: string;
   price: number;
+  typeId: string;
 };
+
+interface MaintenanceApiResponse extends Maintenance {
+    id: string;
+}
 
 export default function MaintenanceForm() {
   const [types, setTypes] = useState<MaintenanceType[]>([]);
   const [cars, setCars] = useState<Car[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     axios.get("/api/maintenance-types")
@@ -47,12 +54,23 @@ export default function MaintenanceForm() {
     },
   });
 
-  const onSubmit = (data: MaintenanceFormData) => {
-    axios.post<Maintenance>('/api/maintenance', {
-      ...data,
-      price: Number(data.price),
-      mileage: Number(data.mileage)
-    })
+  const onSubmit = async (data: MaintenanceFormData) => {
+    try {
+        setIsLoading(true);
+        const response = await axios.post<MaintenanceApiResponse>('/api/maintenance', {
+            ...data,
+            price: Number(data.price),
+            mileage: Number(data.mileage)
+        })
+        
+        if (response.status === 201) {
+            setIsLoading(false);
+            router.push('/maintenance');
+        }
+    } catch (err) {
+      setIsLoading(false);
+      console.error("Ошибка при создании обслуживания:", err);
+    }
   };
 
   return (
@@ -158,8 +176,8 @@ export default function MaintenanceForm() {
       </div>
 
       {/* Кнопка */}
-      <BaseButton className="w-full" type="submit">
-        Сохранить
+      <BaseButton className="w-full text-center" type="submit" disabled={isLoading}>
+        {isLoading ? 'Сохранение...' : 'Сохранить'}
       </BaseButton>
     </form>
   );
