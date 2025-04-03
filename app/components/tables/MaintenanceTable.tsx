@@ -44,35 +44,37 @@ type MaintenanceTableProps = {
 
 export default function MaintenanceTable({ maintenances }: MaintenanceTableProps) {
   return (
-    <div className="container mx-auto px-4 py-8">
-      <table className="min-w-full bg-gray-900 border border-gray-700 rounded-lg overflow-hidden">
-        <thead>
-          <tr className="bg-gray-800">
-            {columns.map((column) => (
-              <th 
-                key={column.header}
-                className="py-3 px-4 border-b border-gray-700 text-left text-gray-300"
-              >
-                {column.header}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {maintenances.map((maintenance) => (
-            <tr key={maintenance.id} className="hover:bg-gray-800 transition-colors">
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="overflow-x-auto">
+        <table className="min-w-full bg-gray-900 border border-gray-700 rounded-lg overflow-hidden">
+          <thead>
+            <tr className="bg-gray-800">
               {columns.map((column) => (
-                <td 
-                  key={`${maintenance.id}-${column.header}`}
-                  className="py-3 px-4 border-b border-gray-700 text-gray-300"
+                <th 
+                  key={column.header}
+                  className="py-3 px-4 border-b border-gray-700 text-left text-gray-300"
                 >
-                  {column.accessor(maintenance)}
-                </td>
+                  {column.header}
+                </th>
               ))}
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {maintenances.map((maintenance) => (
+              <tr key={maintenance.id} className="hover:bg-gray-800 transition-colors">
+                {columns.map((column) => (
+                  <td 
+                    key={`${maintenance.id}-${column.header}`}
+                    className="py-3 px-4 border-b border-gray-700 text-gray-300"
+                  >
+                    {column.accessor(maintenance)}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   )
 } 
