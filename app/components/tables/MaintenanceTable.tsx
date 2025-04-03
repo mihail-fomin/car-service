@@ -1,5 +1,8 @@
-import React from 'react'
+'use client'
+
+import React, { useState } from 'react'
 import { Maintenance, Car, MaintenanceType } from '@prisma/client'
+import EditMaintenanceForm from '../forms/EditMaintenanceForm'
 
 type MaintenanceWithRelations = Maintenance & {
   car: Car
@@ -43,6 +46,8 @@ type MaintenanceTableProps = {
 }
 
 export default function MaintenanceTable({ maintenances }: MaintenanceTableProps) {
+  const [selectedMaintenance, setSelectedMaintenance] = useState<MaintenanceWithRelations | null>(null)
+
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="overflow-x-auto">
@@ -61,7 +66,11 @@ export default function MaintenanceTable({ maintenances }: MaintenanceTableProps
           </thead>
           <tbody>
             {maintenances.map((maintenance) => (
-              <tr key={maintenance.id} className="hover:bg-gray-800 transition-colors">
+              <tr 
+                key={maintenance.id} 
+                className="hover:bg-gray-800 transition-colors cursor-pointer"
+                onClick={() => setSelectedMaintenance(maintenance)}
+              >
                 {columns.map((column) => (
                   <td 
                     key={`${maintenance.id}-${column.header}`}
@@ -75,6 +84,17 @@ export default function MaintenanceTable({ maintenances }: MaintenanceTableProps
           </tbody>
         </table>
       </div>
+
+      {selectedMaintenance && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="w-full max-w-2xl">
+            <EditMaintenanceForm 
+              maintenance={selectedMaintenance}
+              onClose={() => setSelectedMaintenance(null)}
+            />
+          </div>
+        </div>
+      )}
     </div>
   )
 } 

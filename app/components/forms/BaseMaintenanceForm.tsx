@@ -5,13 +5,13 @@ import BaseButton from "../ui/BaseButton";
 import { useEffect, useState } from "react";
 import SelectMenu from "../ui/SelectMenu";
 import axios from "axios";
-import { Car, Maintenance } from "@prisma/client";
+import { Car, Maintenance, MaintenanceType } from "@prisma/client";
 import { useRouter } from "next/navigation";
 
-type MaintenanceType = {
-  id: string;
-  name: string;
-};
+export type MaintenanceWithRelations = Maintenance & {
+  car: Car
+  type: MaintenanceType
+}
 
 type MaintenanceFormData = {
   carId: string;
@@ -22,11 +22,21 @@ type MaintenanceFormData = {
   typeId: string;
 };
 
-interface MaintenanceApiResponse extends Maintenance {
-    id: string;
+type BaseMaintenanceFormProps = {
+  maintenance?: MaintenanceWithRelations;
+  onClose?: () => void;
+  onSubmit: (data: MaintenanceFormData) => Promise<void>;
+  title: string;
+  submitButtonText: string;
 }
 
-export default function MaintenanceForm() {
+export default function BaseMaintenanceForm({ 
+  maintenance, 
+  onClose, 
+  onSubmit,
+  title,
+  submitButtonText
+}: BaseMaintenanceFormProps) {
   const [types, setTypes] = useState<MaintenanceType[]>([]);
   const [cars, setCars] = useState<Car[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -48,38 +58,46 @@ export default function MaintenanceForm() {
     setValue,
     formState: { errors },
   } = useForm<MaintenanceFormData>({
-    defaultValues: {
-      price: 0,
-      date: new Date().toISOString().split('T')[0]
+    defaultValues: maintenance ? {
+      carId: maintenance.carId,
+      date: new Date(maintenance.date).toISOString().split('T')[0],
+      mileage: maintenance.mileage,
+      note: maintenance.note || '',
+      price: maintenance.price || 0,
+      typeId: maintenance.typeId
+    } : {
+      date: new Date().toISOString().split('T')[0],
+      price: 0
     },
   });
 
-  const onSubmit = async (data: MaintenanceFormData) => {
+  useEffect(() => {
+    if (maintenance) {
+      setValue('carId', maintenance.carId)
+      setValue('typeId', maintenance.typeId)
+    }
+  }, [maintenance, setValue])
+
+  const handleFormSubmit = async (data: MaintenanceFormData) => {
     try {
-        setIsLoading(true);
-        const response = await axios.post<MaintenanceApiResponse>('/api/maintenance', {
-            ...data,
-            price: Number(data.price),
-            mileage: Number(data.mileage)
-        })
-        
-        if (response.status === 201) {
-            setIsLoading(false);
-            router.push('/maintenance');
-        }
+      setIsLoading(true);
+      await onSubmit(data);
+      setIsLoading(false);
+      router.push('/maintenance');
+      if (onClose) onClose();
     } catch (err) {
       setIsLoading(false);
-      console.error("Ошибка при создании обслуживания:", err);
+      console.error("Ошибка при сохранении обслуживания:", err);
     }
   };
 
   return (
     <form
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={handleSubmit(handleFormSubmit)}
       className="max-w-lg p-6 mx-auto space-y-4 bg-gray-900 shadow-lg rounded-2xl"
     >
       <h2 className="text-xl font-semibold text-gray-200">
-        Добавить обслуживание
+        {title}
       </h2>
 
       {/* Автомобиль */}
@@ -163,6 +181,7 @@ export default function MaintenanceForm() {
           <p className="text-sm text-red-400">{errors.price.message}</p>
         )}
       </div>
+
       {/* Заметки */}
       <div>
         <label className="block text-sm font-medium text-gray-300">
@@ -175,10 +194,20 @@ export default function MaintenanceForm() {
         ></textarea>
       </div>
 
-      {/* Кнопка */}
-      <BaseButton className="w-full text-center" type="submit" disabled={isLoading}>
-        {isLoading ? 'Сохранение...' : 'Сохранить'}
-      </BaseButton>
+      <div className="flex gap-4">
+        <BaseButton className="flex-1" type="submit" disabled={isLoading}>
+          {isLoading ? "Сохранение..." : submitButtonText}
+        </BaseButton>
+        {onClose && (
+          <BaseButton 
+            className="flex-1 bg-gray-700 hover:bg-gray-600" 
+            type="button" 
+            onClick={onClose}
+          >
+            Отмена
+          </BaseButton>
+        )}
+      </div>
     </form>
   );
-}
+} 

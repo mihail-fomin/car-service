@@ -1,12 +1,7 @@
-import MaintenanceForm from '@/app/components/forms/MaintenanceForm'
-import React from 'react'
+import CreateMaintenanceForm from '@/app/components/forms/CreateMaintenanceForm'
 
-type Props = {}
-
-const page = (props: Props) => {
-  return (
-    <MaintenanceForm />
-  )
+const page = () => {
+    return <CreateMaintenanceForm />
 }
 
 export default page
