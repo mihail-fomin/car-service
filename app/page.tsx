@@ -9,7 +9,7 @@ export default async function Home() {
     const session = await getServerSession(authOptions)
 
     return (
-        <div className="flex-1 flex flex-col items-center justify-center">
+        <div className="flex flex-col h-[calc(100vh-4rem)] items-center justify-center">
             <section className="max-w-3xl text-center px-4">
                 <h1 className="text-4xl font-bold text-gray-900 dark:text-white">Планируй обслуживание своего автомобиля</h1>
                 <p className="text-center mt-4 text-gray-500 dark:text-gray-400">
