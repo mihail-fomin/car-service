@@ -91,6 +91,8 @@ export default function BaseMaintenanceForm({
     }
   };
 
+  const carLabel = `${maintenance?.car.make} ${maintenance?.car.model} ${maintenance?.car.year}`
+
   return (
     <form
       onSubmit={handleSubmit(handleFormSubmit)}
@@ -111,6 +113,7 @@ export default function BaseMaintenanceForm({
         }))}
         name="carId"
         setValue={setValue}
+        defaultValue={maintenance && {id: maintenance?.carId, label: carLabel}}
       />
       {errors.carId && (
         <p className="text-sm text-red-400">{errors.carId.message}</p>
@@ -128,6 +131,7 @@ export default function BaseMaintenanceForm({
           }))}
           name="typeId"
           setValue={setValue}
+          defaultValue={maintenance && {id: maintenance?.typeId, label: maintenance?.type.name}}
         />
         {errors.typeId && (
           <p className="text-sm text-red-400">{errors.typeId.message}</p>

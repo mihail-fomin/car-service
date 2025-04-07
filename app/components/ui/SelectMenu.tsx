@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/react'
 import { ChevronUpDownIcon } from '@heroicons/react/16/solid'
 import { CheckIcon } from '@heroicons/react/20/solid'
-import { UseFormRegister, FieldValues, Path, UseFormSetValue, PathValue } from 'react-hook-form'
+import { FieldValues, Path, UseFormSetValue, PathValue } from 'react-hook-form'
 
 type Option = {
     id: string;
@@ -14,11 +14,12 @@ type Option = {
 type Props<T extends FieldValues> = {
     options: Option[],
     name?: Path<T>,
-    setValue?: UseFormSetValue<T>
+    setValue?: UseFormSetValue<T>,
+    defaultValue?: Option,
 }
 
-export default function SelectMenu<T extends FieldValues>({ options, name, setValue }: Props<T>) {
-  const [selected, setSelected] = useState<Option | null>(null)
+export default function SelectMenu<T extends FieldValues>({ options, name, setValue, defaultValue }: Props<T>) {
+  const [selected, setSelected] = useState<Option | null>(defaultValue || null)
 
   const handleChange = (value: Option) => {
     setSelected(value)
