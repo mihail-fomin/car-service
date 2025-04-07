@@ -8,7 +8,7 @@ export async function PUT(
   try {
     const body = await req.json();
     const { carId, mileage, date, typeId, note, price } = body;
-
+    const { id } = await params
     // Проверка обязательных полей
     if (!carId || !mileage || !date || !typeId) {
       return NextResponse.json({ error: 'Отсутствуют обязательные поля' }, { status: 400 });
@@ -17,7 +17,7 @@ export async function PUT(
     // Обновление записи об обслуживании
     const maintenance = await prisma.maintenance.update({
       where: {
-        id: params.id
+        id,
       },
       data: {
         carId,
