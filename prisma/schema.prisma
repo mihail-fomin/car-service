@@ -17,6 +17,7 @@ model User {
   cars      Car[]
   accounts  Account[]
   sessions  Session[]
+  maintenances Maintenance[]
 }
 
 model Account {
@@ -62,7 +63,11 @@ model Maintenance {
   mileage     Int
   typeId      String
   price       Float?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
+  userId      String
+  user        User      @relation(fields: [userId], references: [id])
   type        MaintenanceType @relation(fields: [typeId], references: [id])
 
   car         Car      @relation(fields: [carId], references: [id])

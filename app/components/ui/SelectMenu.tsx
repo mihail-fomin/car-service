@@ -24,7 +24,7 @@ export default function SelectMenu<T extends FieldValues>({ options, name, setVa
   const handleChange = (value: Option) => {
     setSelected(value)
     if (setValue && name) {
-      setValue(name, value.id as PathValue<T, Path<T>>)
+      setValue(name, value.id as PathValue<T, Path<T>>, { shouldValidate: true })
     }
   }
 

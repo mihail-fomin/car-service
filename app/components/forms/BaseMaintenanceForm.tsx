@@ -69,6 +69,14 @@ export default function BaseMaintenanceForm({
       date: new Date().toISOString().split('T')[0],
       price: 0
     },
+    mode: "onChange",
+    resolver: (values) => {
+      const errors: any = {};
+      if (!values.typeId) {
+        errors.typeId = { message: "Выберите тип обслуживания" };
+      }
+      return { values, errors };
+    }
   });
 
   useEffect(() => {
@@ -134,7 +142,7 @@ export default function BaseMaintenanceForm({
           defaultValue={maintenance && {id: maintenance?.typeId, label: maintenance?.type.name}}
         />
         {errors.typeId && (
-          <p className="text-sm text-red-400">{errors.typeId.message}</p>
+          <p className="text-sm text-red-400">{errors.typeId.message || "Выберите тип обслуживания"}</p>
         )}
       </div>
 
