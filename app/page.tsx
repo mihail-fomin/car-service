@@ -1,9 +1,9 @@
 import { getServerSession } from "next-auth";
 import Link from "next/link";
 import authOptions from "./auth/authOptions";
+import BaseButton from "./components/ui/BaseButton";
 import { Avatar } from "antd";
 import Image from "next/image";
-import BaseButton from "./components/ui/BaseButton";
 
 export default async function Home() {
     const session = await getServerSession(authOptions)
@@ -37,7 +37,7 @@ export default async function Home() {
                     ) : (
                         <div className="flex gap-4 mt-4">
                             <Link
-                                className="text-white px-4 py-2 rounded-md border-[1px] border-gray-200"
+                                className="text-gray-700 dark:text-gray-300 px-4 py-2 rounded-md border-[1px] border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700"
                                 href="/api/auth/signin"
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
@@ -50,8 +50,8 @@ export default async function Home() {
             </header>
 
             <section className="flex flex-col items-center justify-center flex-grow text-center mx-4">
-                <h1 className="text-4xl font-bold">Планируй обслуживание своего автомобиля</h1>
-                <p className="text-center mt-4 text-gray-500">
+                <h1 className="text-4xl font-bold text-gray-900 dark:text-white">Планируй обслуживание своего автомобиля</h1>
+                <p className="text-center mt-4 text-gray-500 dark:text-gray-400">
                     Начни сейчас и получи доступ к лучшим инструментам для обслуживания автомобиля.
                 </p>
 
