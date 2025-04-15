@@ -10,17 +10,17 @@ export default async function Home() {
 
     return (
         <div className="flex flex-col h-[calc(100vh-4rem)] items-center justify-center">
-            <section className="max-w-3xl text-center px-4">
+            <section className="max-w-3xl px-4 text-center">
                 <h1 className="text-4xl font-bold text-gray-900 dark:text-white">Планируй обслуживание своего автомобиля</h1>
-                <p className="text-center mt-4 text-gray-500 dark:text-gray-400">
+                <p className="mt-4 text-center text-gray-500 dark:text-gray-400">
                     Начни сейчас и получи доступ к лучшим инструментам для обслуживания автомобиля.
                 </p>
 
                 {session && (
-                    <div className="flex gap-4 mt-8 justify-center">
+                    <div className="flex justify-center gap-4 mt-8">
                         <BaseButton>
                             <Link href='/maintenance'>
-                                Перейти к планированию
+                                История обслуживания
                             </Link>
                         </BaseButton>
 
