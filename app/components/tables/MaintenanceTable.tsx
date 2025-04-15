@@ -86,7 +86,14 @@ export default function MaintenanceTable({ maintenances }: MaintenanceTableProps
       </div>
 
       {selectedMaintenance && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50">
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              setSelectedMaintenance(null);
+            }
+          }}
+        >
           <div className="w-full max-w-2xl">
             <EditMaintenanceForm 
               maintenance={selectedMaintenance}

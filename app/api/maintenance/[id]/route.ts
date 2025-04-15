@@ -35,3 +35,23 @@ export async function PUT(
     return NextResponse.json({ error: 'Ошибка сервера' }, { status: 500 });
   }
 } 
+
+export async function DELETE(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const { id } = await params;
+
+    await prisma.maintenance.delete({
+      where: {
+        id,
+      },
+    });
+
+    return NextResponse.json({ message: 'Запись об обслуживании удалена' }, { status: 200 });
+  } catch (error) {
+    console.error('Ошибка при удалении записи об обслуживании:', error);
+    return NextResponse.json({ error: 'Ошибка сервера' }, { status: 500 });
+  }
+}

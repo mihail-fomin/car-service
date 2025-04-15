@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
 import "./globals.css";
 import Header from "./components/Header";
+import '@ant-design/v5-patch-for-react-19';
 
 const roboto = Roboto({
     subsets: ["latin"],

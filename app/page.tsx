@@ -2,8 +2,6 @@ import { getServerSession } from "next-auth";
 import Link from "next/link";
 import authOptions from "./auth/authOptions";
 import BaseButton from "./components/ui/BaseButton";
-import { Avatar } from "antd";
-import Image from "next/image";
 
 export default async function Home() {
     const session = await getServerSession(authOptions)

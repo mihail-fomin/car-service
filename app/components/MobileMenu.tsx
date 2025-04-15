@@ -5,9 +5,10 @@ import Link from "next/link";
 import { Avatar } from "antd";
 import Image from "next/image";
 import BaseButton from "./ui/BaseButton";
+import { Session } from "next-auth";
 
 interface MobileMenuProps {
-    session: any;
+    session: Session | null;
 }
 
 export default function MobileMenu({ session }: MobileMenuProps) {
