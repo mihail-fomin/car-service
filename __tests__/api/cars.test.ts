@@ -1,6 +1,15 @@
 import { GET, POST } from '@/app/api/cars/route';
 import { prisma } from '@/prisma/seed';
 import { NextResponse, NextRequest } from 'next/server';
+import { getServerSession } from 'next-auth/next';
+
+jest.mock('@/app/auth/authOptions', () => ({
+    authOptions: {}
+}));
+
+jest.mock('next-auth/next', () => ({
+    getServerSession: jest.fn()
+}));
 
 // Mock prisma client
 jest.mock('@/prisma/seed', () => ({
@@ -60,36 +69,35 @@ describe('Cars API', () => {
 
   describe('POST /api/cars', () => {
     it('should create a new car', async () => {
-      // Mock request data
-      const requestData = {
-        make: 'Toyota',
-        model: 'Corolla',
-        year: 2020,
-        userId: '123'
-      };
-
-      // Mock response data
-      const mockCar = {
-        id: 1,
-        ...requestData
-      };
-
-      // Setup mock request
-      const mockReq = {
-        json: () => Promise.resolve(requestData)
-      } as NextRequest;
-
-      // Setup mock return value
-      (prisma.car.create as jest.Mock).mockResolvedValue(mockCar);
-
-      // Execute the request
-      const response = await POST(mockReq);
-      const data = await response.json();
-
-      // Assertions
-      expect(prisma.car.create).toHaveBeenCalledWith({ data: requestData });
-      expect(data).toEqual(mockCar);
-    });
+        const requestData = {
+          make: 'Toyota',
+          model: 'Corolla',
+          year: 2020,
+          userId: '123'
+        };
+      
+        const mockCar = {
+          id: 1,
+          ...requestData
+        };
+      
+        const mockReq = {
+          json: () => Promise.resolve(requestData)
+        } as unknown as NextRequest;
+      
+        (getServerSession as jest.Mock).mockResolvedValue({
+          user: { id: '123' }
+        });
+      
+        (prisma.car.create as jest.Mock).mockResolvedValue(mockCar);
+      
+        const response = await POST(mockReq);
+        const data = await response.json();
+      
+        expect(prisma.car.create).toHaveBeenCalledWith({ data: requestData });
+        expect(data).toEqual(mockCar);
+      });
+      
 
     it('should handle errors gracefully', async () => {
       // Setup mock request
@@ -99,6 +107,11 @@ describe('Cars API', () => {
 
       // Setup mock to throw error
       (prisma.car.create as jest.Mock).mockRejectedValue(new Error('Database error'));
+
+
+        (getServerSession as jest.Mock).mockResolvedValue({
+            user: { id: '123', name: 'Test User' }
+        });
 
       // Execute the request and expect it to throw
       await expect(POST(mockReq)).rejects.toThrow('Database error');
