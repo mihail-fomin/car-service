@@ -1,31 +1,31 @@
-import EditMaintenanceForm from '@/app/components/forms/EditMaintenanceForm'
-import { prisma } from '@/prisma/seed'
-import { notFound } from 'next/navigation'
+import EditMaintenanceForm from '@/app/components/forms/EditMaintenanceForm';
+import { prisma } from '@/prisma/seed';
+import { notFound } from 'next/navigation';
 
 type Props = {
     params: {
-        id: string
-    }
-}
+        id: string;
+    };
+};
 
 const page = async (props: Props) => {
-    const id = props.params.id
+    const id = props.params.id;
 
     const maintenance = await prisma.maintenance.findUnique({
         where: {
-            id: id
+            id: id,
         },
         include: {
             car: true,
-            type: true
-        }
-    })
+            type: true,
+        },
+    });
 
     if (!maintenance) {
-        notFound()
+        notFound();
     }
 
-    return <EditMaintenanceForm maintenance={maintenance} onClose={() => {}} />
-}
+    return <EditMaintenanceForm maintenance={maintenance} onClose={() => {}} />;
+};
 
-export default page
+export default page;

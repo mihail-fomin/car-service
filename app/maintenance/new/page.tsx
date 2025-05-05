@@ -1,7 +1,7 @@
-import CreateMaintenanceForm from '@/app/components/forms/CreateMaintenanceForm'
+import CreateMaintenanceForm from '@/app/components/forms/CreateMaintenanceForm';
 
 const page = () => {
-    return <CreateMaintenanceForm />
-}
+    return <CreateMaintenanceForm />;
+};
 
-export default page
+export default page;

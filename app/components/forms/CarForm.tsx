@@ -39,9 +39,9 @@ export function CarForm() {
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
-        setFormData(prev => ({
+        setFormData((prev) => ({
             ...prev,
-            [name]: value
+            [name]: value,
         }));
     };
 
@@ -88,4 +88,4 @@ export function CarForm() {
             </BaseButton>
         </form>
     );
-} 
+}

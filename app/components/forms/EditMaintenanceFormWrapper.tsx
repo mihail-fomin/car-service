@@ -1,25 +1,20 @@
-'use client'
+'use client';
 
-import { useRouter } from 'next/navigation'
-import EditMaintenanceForm from './EditMaintenanceForm'
-import { Maintenance, Car, MaintenanceType } from '@prisma/client'
+import { useRouter } from 'next/navigation';
+import EditMaintenanceForm from './EditMaintenanceForm';
+import { Maintenance, Car, MaintenanceType } from '@prisma/client';
 
 type MaintenanceWithRelations = Maintenance & {
-  car: Car
-  type: MaintenanceType
-}
+    car: Car;
+    type: MaintenanceType;
+};
 
 type Props = {
-  maintenance: MaintenanceWithRelations
-}
+    maintenance: MaintenanceWithRelations;
+};
 
 export default function EditMaintenanceFormWrapper({ maintenance }: Props) {
-  const router = useRouter()
+    const router = useRouter();
 
-  return (
-    <EditMaintenanceForm 
-      maintenance={maintenance} 
-      onClose={() => router.push('/maintenance')} 
-    />
-  )
-} 
+    return <EditMaintenanceForm maintenance={maintenance} onClose={() => router.push('/maintenance')} />;
+}
