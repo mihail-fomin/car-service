@@ -75,12 +75,12 @@ export const prisma = new PrismaClient();
 
 // async function main() {
 //   console.log("Начало загрузки данных...");
-  
+
 //   try {
 //     await seedMaintenanceTypes();
 //     const user = await seedTestUser();
 //     await seedTestCars(user.id);
-    
+
 //     console.log("Данные успешно загружены!");
 //   } catch (error) {
 //     console.error("Ошибка при загрузке данных:", error);

@@ -79,7 +79,7 @@ export default async function Header() {
                             <>
                                 <div className="hidden md:block">
                                     <Link
-                                        className="text-gray-700 dark:text-gray-300 px-4 py-2 rounded-md border-[1px] border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700"
+                                        className="text-gray-700 w-10 h-10 flex items-center justify-center dark:text-gray-300 rounded-md border-[1px] border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700"
                                         href="/api/auth/signin"
                                     >
                                         <svg

@@ -46,7 +46,7 @@ export function CarForm() {
     };
 
     return (
-        <form onSubmit={handleSubmit} className="max-w-md space-y-4">
+        <form onSubmit={handleSubmit} className="max-w-md space-y-4 mx-auto">
             <div className="space-y-2">
                 <Label htmlFor="make">Марка</Label>
                 <Input
@@ -75,7 +75,7 @@ export function CarForm() {
                     id="year"
                     name="year"
                     type="number"
-                    value={formData.year}
+                    value={formData.year || new Date().getFullYear()}
                     onChange={handleChange}
                     required
                     placeholder="Например: 2020"
